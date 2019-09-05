@@ -7,7 +7,7 @@
 
 //Librerías pantalla LCD
 #include <Wire.h>
-#include <LiquidCrystal.h>
+#include <LiquidCrystal_I2C.h>
 
 //Librería Servo
 #include <Servo.h>
