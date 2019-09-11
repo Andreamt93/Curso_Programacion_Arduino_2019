@@ -15,8 +15,7 @@
 #define PIN_DHT11 11
 #define PIN_BUZZER 8
 #define NOTE_C5  523  //Frecuencia de sonido del buzzer
-
-#define UMBRAL 24;
+#define UMBRAL 24
 boolean alarma_temperatura;
 
 //Objeto DHT11
@@ -48,6 +47,49 @@ void setup()
 
 void loop()
 {
+    int temp = temperatura ();
+  if (temp > UMBRAL) {
+    if (!alarma_temperatura) {
+      alarma_temperatura = true;
+      tone(PIN_BUZZER, NOTE_C5);
+      Serial.println("¡ALARMA!");
+    }
+  }
+  else {
+    if (alarma_temperatura) {
+      alarma_temperatura = false;
+      noTone(PIN_BUZZER);
+      Serial.println("TEMPERATURA NORMAL");
+    }
+  }
+  //Actualizar LEDs
+  Serial.println(temp);
+  switch (temp) {
+    case 27:
+      digitalWrite(PIN_LED_4, HIGH);
+      digitalWrite(PIN_LED_3, HIGH);
+      digitalWrite(PIN_LED_2, HIGH);
+      digitalWrite(PIN_LED_1, HIGH);
+      break;
+    case 26:
+      digitalWrite(PIN_LED_3, HIGH);
+      digitalWrite(PIN_LED_2, HIGH);
+      digitalWrite(PIN_LED_1, HIGH);
+      break;
+    case 25:
+      digitalWrite(PIN_LED_2, HIGH);
+      digitalWrite(PIN_LED_1, HIGH);
+    case 24:
+      digitalWrite(PIN_LED_1, HIGH);
+      break;
+  }
+  if (temp < 24) {
+    digitalWrite(PIN_LED_1, LOW);
+    digitalWrite(PIN_LED_2, LOW);
+    digitalWrite(PIN_LED_3, LOW);
+    digitalWrite(PIN_LED_4, LOW);
+  }
+}
   float temperatura ()
   {
     byte temperature = 0;
@@ -66,7 +108,6 @@ void loop()
       Serial.print(", Humedad:");
       Serial.println(humidity);
     }
+    delay(1500);
     return temperature;
   }
-
-}
